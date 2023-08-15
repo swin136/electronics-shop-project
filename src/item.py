@@ -13,7 +13,18 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        pass
+        self.name = name.strip()
+        if not (isinstance(price, float) or isinstance(price, int)):
+            raise ValueError('Цена за единицу товара должна быть только числом.')
+        if price <= 0:
+            raise ValueError('Цена за единицу товара может быть положительным числом!')
+        self.price = price
+        if not isinstance(quantity, int):
+            raise ValueError('Количество товара должно быть только числом.')
+        if quantity <= 0:
+            raise ValueError('Количество товара может быть только положительным числом"')
+        self.quantity = quantity
+        self.all.append(self)
 
     def calculate_total_price(self) -> float:
         """
@@ -21,10 +32,10 @@ class Item:
 
         :return: Общая стоимость товара.
         """
-        pass
+        return self.price * self.quantity
 
     def apply_discount(self) -> None:
         """
         Применяет установленную скидку для конкретного товара.
         """
-        pass
+        self.price *= self.pay_rate
