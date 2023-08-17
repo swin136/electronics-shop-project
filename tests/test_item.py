@@ -94,13 +94,24 @@ def test_instantiate_from_csv():
     assert item_test.price == 50
 
 
-def test_repr_method():
-    """Тестируем магический метод __rpr__"""
+def test_repr_method(get_test_item):
+    """Тестируем магический метод __repr__"""
     item1 = Item("Смартфон", 12000, 30)
     assert repr(item1) == "Item('Смартфон', 12000, 30)"
+    item2 = Item("Планшет", 25000, 18)
+    assert repr(item2) == "Item('Планшет', 25000, 18)"
+    assert repr(get_test_item) == "Item('Телевизор', 12500, 220)"
+
+    # Тестируем магический метод __repr__ у экземпляра класса-потомка
+    class ItemNew(Item):
+        ...
+
+    test_item = ItemNew("Монитор", 11500, 30)
+    assert repr(test_item) == "ItemNew('Монитор', 11500, 30)"
 
 
-def test_str_method():
-    """Тестируем магический метод __sts__"""
+def test_str_method(get_test_item):
+    """Тестируем магический метод __str__"""
+    assert str(get_test_item) == "Телевизор"
     item1 = Item("Смартфон", 12000, 30)
     assert str(item1) == "Смартфон"
