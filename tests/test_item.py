@@ -92,3 +92,15 @@ def test_instantiate_from_csv():
     item_test = Item.all[3]
     assert item_test.name == 'Мышка'
     assert item_test.price == 50
+
+
+def test_repr_method():
+    """Тестируем магический метод __rpr__"""
+    item1 = Item("Смартфон", 12000, 30)
+    assert repr(item1) == "Item('Смартфон', 12000, 30)"
+
+
+def test_str_method():
+    """Тестируем магический метод __sts__"""
+    item1 = Item("Смартфон", 12000, 30)
+    assert str(item1) == "Смартфон"
