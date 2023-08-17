@@ -4,11 +4,16 @@ from src.item import Item
 
 
 def test_count_objects():
-    """Тестируем счетчик количества объектов экземпляров класса Item"""
+    """Тестируем счетчик количества объектов экземпляров класса Item и корректность хранения объектов"""
+    # Тестируем счетчик
     Item("Телевизор", 12500, 220)
     Item("Ноутбук", 70000, 15)
     Item("Смартфон", 21000, 20)
     assert len(Item.all) == 3
+
+    # Тестируем правильность записи объектов в список Item.all
+    assert Item.all[1].name == "Ноутбук"
+
 
 @pytest.fixture
 def get_test_item():
@@ -87,3 +92,26 @@ def test_instantiate_from_csv():
     item_test = Item.all[3]
     assert item_test.name == 'Мышка'
     assert item_test.price == 50
+
+
+def test_repr_method(get_test_item):
+    """Тестируем магический метод __repr__"""
+    item1 = Item("Смартфон", 12000, 30)
+    assert repr(item1) == "Item('Смартфон', 12000, 30)"
+    item2 = Item("Планшет", 25000, 18)
+    assert repr(item2) == "Item('Планшет', 25000, 18)"
+    assert repr(get_test_item) == "Item('Телевизор', 12500, 220)"
+
+    # Тестируем магический метод __repr__ у экземпляра класса-потомка
+    class ItemNew(Item):
+        ...
+
+    test_item = ItemNew("Монитор", 11500, 30)
+    assert repr(test_item) == "ItemNew('Монитор', 11500, 30)"
+
+
+def test_str_method(get_test_item):
+    """Тестируем магический метод __str__"""
+    assert str(get_test_item) == "Телевизор"
+    item1 = Item("Смартфон", 12000, 30)
+    assert str(item1) == "Смартфон"
