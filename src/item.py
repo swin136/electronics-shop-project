@@ -71,7 +71,7 @@ class Item:
         with open(CSV_FILE, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                Item(row.get('name'), float(row.get('price')), int(row.get('quantity')))
+                cls(row.get('name'), float(row.get('price')), int(row.get('quantity')))
 
     def __repr__(self):
         """Магический метод для официального "текстового" образа объекта класса"""
