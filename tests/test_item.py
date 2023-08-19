@@ -115,3 +115,30 @@ def test_str_method(get_test_item):
     assert str(get_test_item) == "Телевизор"
     item1 = Item("Смартфон", 12000, 30)
     assert str(item1) == "Смартфон"
+
+
+def test_add_method():
+    """Проверяем функцию сложения экземпляров класса Item"""
+    # Инициализируем экземпляры класса Item для последующего сложения
+    item1 = Item("Смартфон", 12000, 30)
+    item2 = Item("Планшет", 25000, 18)
+    # Осуществляем сложение экземпляров класса Item
+    assert item1 + item2 == 48
+
+
+def test_add_illegal():
+    """Проверяем невозможность сложения с экземплярами не `Item` классов"""
+    # Инициализируем экземпляр класса Item для последующего сложения
+    item_check = Item("Смартфон", 12000, 30)
+
+    # Создаем класс IllegalItem в котором есть поле quantity
+    class IllegalItem:
+        def __init__(self, quantity: int):
+            self.quantity = quantity
+
+    # Создаем экземпляр класса IllegalItem
+    illegal_item = IllegalItem(20)
+    # Пытаемся осуществить сложение экземпляра класса Item c экземпляром класса IllegalItem
+    # и поймать ошибку TypeError, генерируемую декоратором @check_instance_item класса Item
+    with pytest.raises(TypeError):
+        assert item_check + illegal_item == 50
