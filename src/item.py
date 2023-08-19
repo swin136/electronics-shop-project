@@ -73,6 +73,21 @@ class Item:
             for row in reader:
                 cls(row.get('name'), float(row.get('price')), int(row.get('quantity')))
 
+    @staticmethod
+    def check_instance_item(function):
+        """Проверяет чтобы второй аргумент функции был экземпляров того же класса, что и первый"""
+        def inner(*args, **kwargs):
+            if not isinstance(args[1], Item):
+                raise TypeError('Несоответствие типов для проведения арифметических '
+                                '(логических) операций с экземплярами классов!')
+            result = function(*args, **kwargs)
+            return result
+        return inner
+
+    @check_instance_item
+    def __add__(self, other):
+        return self.quantity + other.quantity
+
     def __repr__(self):
         """Магический метод для официального "текстового" образа объекта класса"""
         return f"{self.__class__.__name__}('{self.name}', {self.price}, {self.quantity})"
