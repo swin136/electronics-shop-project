@@ -141,8 +141,12 @@ def test_add_illegal():
     illegal_item = IllegalItem(20)
     # Пытаемся осуществить сложение экземпляра класса Item c экземпляром класса IllegalItem
     # и поймать ошибку TypeError, генерируемую декоратором @check_instance_item класса Item
-    with pytest.raises(TypeError):
+    with pytest.raises(TypeError) as tp_error:
         assert item_check + illegal_item == 50
+
+    # Дополнительно проверяем сообщение, которое передается при попытке некорректного сложения
+    assert str(tp_error.value) == ('Несоответствие типов для проведения арифметических (логических) операций с '
+                                   'экземплярами классов!')
 
 
 def test_load_data_from_non_exist_file():
