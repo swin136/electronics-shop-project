@@ -159,7 +159,7 @@ def test_load_data_from_non_exist_file():
 
 
 def test_load_data_from_corrupt_file():
-    """Проверяем появление исключения FileNotFoundError при загрузке данных для инициализации списка элементов класса
+    """Проверяем появление исключения InstantiateCSVError при загрузке данных для инициализации списка элементов класса
     Item из поврежденных csv-файлов"""
     # В файле items_3.csv удалена вторая колонка.
     Item.csv_file = '..\\src\\items_2.csv'
