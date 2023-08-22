@@ -1,6 +1,7 @@
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 import pytest
 from src.item import Item
+from src.item import InstantiateCSVError
 
 
 def test_count_objects():
@@ -142,3 +143,38 @@ def test_add_illegal():
     # и поймать ошибку TypeError, генерируемую декоратором @check_instance_item класса Item
     with pytest.raises(TypeError):
         assert item_check + illegal_item == 50
+
+
+def test_load_data_from_non_exist_file():
+    """Проверяем появление исключения FileNotFoundError при отсутствии csv-файла с данными для инициализации списка
+    элементов класса Item"""
+    # Присваиваем аттрибуту класса имя несуществующего файла
+    Item.csv_file = '..\\src\\no_items.csv'
+    # Формируем сообщение, которое передается вместе вызовом исключения FileNotFoundError
+    error_msg = f'Отсутствует файл {Item.get_only_filename()}'
+    with pytest.raises(FileNotFoundError) as file_not_exists_err:
+        Item.instantiate_from_csv()
+    # Проверяем сообщение, которое передается при вызове исключения FileNotFoundError
+    assert str(file_not_exists_err.value) == error_msg
+
+
+def test_load_data_from_corrupt_file():
+    """Проверяем появление исключения FileNotFoundError при загрузке данных для инициализации списка элементов класса
+    Item из поврежденных csv-файлов"""
+    # В файле items_3.csv удалена вторая колонка.
+    Item.csv_file = '..\\src\\items_2.csv'
+    # Формируем сообщение, которое передается вместе вызовом исключения InstantiateCSVError
+    error_msg = f'Файл {Item.get_only_filename()} поврежден'
+    with pytest.raises(InstantiateCSVError) as inst_csv_error:
+        Item.instantiate_from_csv()
+    # Проверяем сообщение, которое передается при вызове исключения InstantiateCSVError
+    assert str(inst_csv_error.value) == error_msg
+
+    # В файле items_3.csv удалена последняя колонка.
+    Item.csv_file = '..\\src\\items_3.csv'
+    # Формируем сообщение, которое передается вместе вызовом исключения InstantiateCSVError
+    error_msg = f'Файл {Item.get_only_filename()} поврежден'
+    with pytest.raises(InstantiateCSVError) as inst_csv_error:
+        Item.instantiate_from_csv()
+    # Проверяем сообщение, которое передается при вызове исключения InstantiateCSVError
+    assert str(inst_csv_error.value) == error_msg
