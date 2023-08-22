@@ -1,7 +1,6 @@
 import math
 import csv
-
-CSV_FILE = '..\\src\\items.csv'
+from os import path as os_path
 
 
 class Item:
@@ -10,6 +9,7 @@ class Item:
     """
     pay_rate = 1.0
     all = []
+    csv_file = '..\\src\\items.csv'
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -19,8 +19,8 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.__name = ""
-        self.name = name.strip()
+        super().__init__()
+        self.__name = name.strip()
         if not (isinstance(price, float) or isinstance(price, int)):
             raise ValueError('Цена за единицу товара должна быть только числом.')
         if price <= 0:
@@ -66,9 +66,11 @@ class Item:
     @classmethod
     def instantiate_from_csv(cls):
         """Класс-метод инициализации списка элементов класса Item из файла src/items.csv"""
+        if not os_path.isfile(cls.csv_file):
+            raise FileNotFoundError('Отсутствует файл item.csv')
         # Обнуляем список объектов класса
         cls.all = []
-        with open(CSV_FILE, newline='') as csvfile:
+        with open(Item.csv_file, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 cls(row.get('name'), float(row.get('price')), int(row.get('quantity')))
