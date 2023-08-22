@@ -1,12 +1,20 @@
 import math
 import csv
 from os import path as os_path
+from pathlib import Path
+
+
+class InstantiateCSVError(Exception):
+    """Класс пользовательского исключения InstantiateCSVError"""
+    def __init__(self, message):
+        super().__init__(message)
 
 
 class Item:
     """
     Класс для представления товара в магазине.
     """
+    # Аттрибуты класса
     pay_rate = 1.0
     all = []
     csv_file = '..\\src\\items.csv'
@@ -64,16 +72,30 @@ class Item:
         return math.floor(float_value)
 
     @classmethod
+    def get_only_filename(cls):
+        """Функция, которая получает 'чистое' имя файла, хранящееся в аттрибуте класса csv_file"""
+        return Path(cls.csv_file).name
+
+    @classmethod
     def instantiate_from_csv(cls):
         """Класс-метод инициализации списка элементов класса Item из файла src/items.csv"""
         if not os_path.isfile(cls.csv_file):
-            raise FileNotFoundError('Отсутствует файл item.csv')
+            raise FileNotFoundError(f'Отсутствует файл {cls.get_only_filename()}')
         # Обнуляем список объектов класса
         cls.all = []
         with open(Item.csv_file, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                cls(row.get('name'), float(row.get('price')), int(row.get('quantity')))
+                read_name = row.get('name')
+                read_price = row.get('price')
+                read_quantity = row.get('quantity')
+                # Файл поврежден, нет какого-то столбца - выбрасываем исключение InstantiateCSVError с именем
+                # csv-файла, который не удалось открыть и сбрасываем счетчик экземпляров класса all
+                if read_name is None or read_price is None or read_quantity is None:
+                    cls.all = []
+                    raise InstantiateCSVError(f'Файл {cls.get_only_filename()} поврежден')
+                # Все нормально - создаем экземпляр класса Item
+                cls(read_name, float(read_price), int(read_quantity))
 
     @staticmethod
     def check_instance_item(function):
