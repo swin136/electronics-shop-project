@@ -13,5 +13,8 @@ if __name__ == '__main__':
     kb.change_lang().change_lang()
     assert str(kb.language) == "RU"
 
-    kb.language = 'CH'
+    try:
+        kb.language = 'CH'
+    except AttributeError as attribute_error:
+        print(attribute_error)
     # AttributeError: property 'language' of 'Keyboard' object has no setter
