@@ -1,5 +1,5 @@
-import math
 import csv
+import math
 from os import path as os_path
 from pathlib import Path
 
@@ -89,8 +89,9 @@ class Item:
                 read_name = row.get('name')
                 read_price = row.get('price')
                 read_quantity = row.get('quantity')
-                # Файл поврежден, нет какого-то столбца - выбрасываем исключение InstantiateCSVError с именем
-                # csv-файла, который не удалось открыть и сбрасываем счетчик экземпляров класса all
+                # Файл поврежден, нет какого-то столбца - выбрасываем исключение InstantiateCSVError
+                # с именем csv-файла, который не удалось открыть
+                # и сбрасываем счетчик экземпляров класса all
                 if read_name is None or read_price is None or read_quantity is None:
                     cls.all = []
                     raise InstantiateCSVError(f'Файл {cls.get_only_filename()} поврежден')
